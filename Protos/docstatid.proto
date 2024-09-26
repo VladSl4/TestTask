@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "GrpcDocumentService";
+
+package documents;
+
+// Описание gRPC-сервиса, который будет вызываться первым сервисом
+service DocumentGrpc {
+  rpc GetAllDocuments (google.protobuf.Empty) returns (GetAllDocumentsResponse);
+  rpc GetDocumentById (GetDocumentByIdRequest) returns (GetDocumentByIdResponse);
+  rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentResponse);
+  rpc DeleteDocument (DeleteDocumentRequest) returns (DeleteDocumentResponse);
+}
+
+// Сообщения для взаимодействия с gRPC сервисом
+
+
+
+message GetAllDocumentsResponse {
+  repeated Document documents = 1;
+}
+
+message GetDocumentByIdRequest {
+  int32 id = 1;
+}
+
+message GetDocumentByIdResponse {
+  Document document = 1;
+}
+
+message CreateDocumentRequest {
+  int32 amount = 1;
+  string description = 2;
+}
+
+message CreateDocumentResponse {
+  int32 id = 1;
+  string status = 2;
+}
+
+message DeleteDocumentRequest {
+  int32 id = 1;
+}
+
+message DeleteDocumentResponse {
+  string status = 1;
+}
+
+// Описание документа и статуса
+message Document {
+  int32 id = 1;
+  int32 amount = 2;
+  string description = 3;
+  string status = 4;
+  string created_at = 5;
+}
+
+// Описание статуса (можно добавить при необходимости)
+message Status {
+  int32 id = 1;
+  string name = 2;
+}
