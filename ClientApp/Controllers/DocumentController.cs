@@ -56,6 +56,7 @@ namespace ClientApp.Controllers
             try
             {
                 await _client.DeleteDocumentAsync(request);
+                
                 return NoContent();
             }
             catch (RpcException ex) when (ex.StatusCode == Grpc.Core.StatusCode.NotFound)

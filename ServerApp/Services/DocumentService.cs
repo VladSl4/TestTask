@@ -75,52 +75,68 @@ namespace ServerApp.Services {
 
         public override async Task<CreateDocumentResponse> CreateDocument(CreateDocumentRequest request, ServerCallContext context)
         {
-            
+            var createdStatus = from s in _dbContext.Statuses
+                                  where s.Id == 1
+                                  select s;
+
             var newDocument = new TaskDocument
             {
                 Amount = request.Amount,
                 Description = request.Description,
-                DocumentStatuses = 
+                DocumentStatuses =
                 [
                     new DocumentStatus
                     {
-                        StatusId = 1,
-                        CreatedAt = DateTime.UtcNow
+
+                        StatusId = createdStatus.FirstOrDefault().Id,
+                        CreatedAt = DateTime.UtcNow,
+                        Status = createdStatus.FirstOrDefault()
+                        
+
                     }
                 ]
-                
+
             };
 
             _dbContext.Documents.Add(newDocument);
+            _dbContext.DocumentStatuses.Add(newDocument.DocumentStatuses.FirstOrDefault());
             await _dbContext.SaveChangesAsync();
 
             return new CreateDocumentResponse
             {
                 Id = newDocument.Id,
                 Status = newDocument.DocumentStatuses.FirstOrDefault().Status.Name
+
             };
         }
 
         public override async Task<DeleteDocumentResponse> DeleteDocument(DeleteDocumentRequest request, ServerCallContext context)
         {
-            var deletedItem = await (from item in _dbContext.Documents
-                               where item.Id == request.Id
-                               select item).FirstOrDefaultAsync();
-            
-                deletedItem.DocumentStatuses.FirstOrDefault().StatusId = 2;
+            var deletedStatus = from s in _dbContext.Statuses
+                                where s.Id == 2
+                                select s;
+            //var deletedItem = await (from item in _dbContext.Documents
+            //                   where item.Id == request.Id
+            //                   select item).FirstOrDefaultAsync();
 
-                _dbContext.SaveChanges();
+            var deletedItem = await (from item in _dbContext.DocumentStatuses
+                                     where item.Id == request.Id
+                                     select item).FirstOrDefaultAsync();
+
+            deletedItem.Status = deletedStatus.FirstOrDefault();
+            deletedItem.StatusId = deletedStatus.FirstOrDefault().Id;
+
+            //deletedItem.DocumentStatuses.FirstOrDefault().StatusId = deletedStatus.FirstOrDefault().Id;
+            //deletedItem.DocumentStatuses.FirstOrDefault().Status = deletedStatus.FirstOrDefault();
+            await _dbContext.SaveChangesAsync();
 
             return new DeleteDocumentResponse
             {
-                Status = deletedItem.DocumentStatuses.FirstOrDefault().Status.Name
+                Status = deletedStatus.FirstOrDefault().Name
+
             };
-
-
-
-
         }
 
-
+        
     }
 }
