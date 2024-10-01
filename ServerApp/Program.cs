@@ -1,12 +1,18 @@
+using ServerApp.Configurations;
 using ServerApp.Data;
 using ServerApp.Models;
 using ServerApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.Development.json");
+
 // Add services to the container.
+
 builder.Services.AddGrpc();
 builder.Services.AddDbContext<AppDbContext>();
+builder.Services.Configure<DatabaseConfig>(builder.Configuration.GetSection(nameof(DatabaseConfig)));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -12,10 +12,10 @@ namespace ClientApp.Controllers
     public class DocumentController: ControllerBase
     {
         private readonly DocumentGrpc.DocumentGrpcClient _client;
-        public DocumentController() 
+        public DocumentController(DocumentGrpc.DocumentGrpcClient? client) 
         {
-            var channel = GrpcChannel.ForAddress("https://localhost:7173");
-            _client = new DocumentGrpc.DocumentGrpcClient(channel);
+
+            _client = client;
         }
 
         [HttpGet]
@@ -29,15 +29,10 @@ namespace ClientApp.Controllers
         public async Task<ActionResult<Document>> GetDocumentById(int id)
         {
             var request = new GetDocumentByIdRequest { Id = id };
-            try
-            {
-                var response = await _client.GetDocumentByIdAsync(request);
-                return Ok(response.Document);
-            }
-            catch (RpcException ex) when (ex.StatusCode == Grpc.Core.StatusCode.NotFound)
-            {
-                return NotFound("Document not found or has been deleted");
-            }
+            
+            var response = await _client.GetDocumentByIdAsync(request);
+            return Ok(response.Document);
+            
         }
 
         // Создание нового документа
@@ -53,16 +48,11 @@ namespace ClientApp.Controllers
         public async Task<ActionResult> DeleteDocument(int id)
         {
             var request = new DeleteDocumentRequest { Id = id };
-            try
-            {
-                await _client.DeleteDocumentAsync(request);
+            
+             var response = await _client.DeleteDocumentAsync(request);
                 
-                return NoContent();
-            }
-            catch (RpcException ex) when (ex.StatusCode == Grpc.Core.StatusCode.NotFound)
-            {
-                return NotFound("Document not found");
-            }
+                return Ok(response);
+            
         }
     }
 }
