@@ -35,7 +35,7 @@ namespace ClientApp.Controllers
             
         }
 
-        // Создание нового документа
+
         [HttpPost]
         public async Task<ActionResult<CreateDocumentResponse>> CreateDocument([FromBody] CreateDocumentRequest request)
         {
@@ -43,16 +43,13 @@ namespace ClientApp.Controllers
             return CreatedAtAction(nameof(GetDocumentById), new { id = response.Id }, response);
         }
 
-        // Удаление документа
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDocument(int id)
         {
-            var request = new DeleteDocumentRequest { Id = id };
-            
-             var response = await _client.DeleteDocumentAsync(request);
-                
-                return Ok(response);
-            
+            var request = new DeleteDocumentRequest { Id = id };            
+            var response = await _client.DeleteDocumentAsync(request);               
+            return Ok(response);            
         }
     }
 }

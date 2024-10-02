@@ -15,9 +15,9 @@ namespace ServerApp.Configurations
         {
             builder.Property(cs => cs.Name)
                 .HasConversion<string>();
-            builder.HasData(Enum.GetValues(typeof(Enums.StatusEnum))
-                .Cast<Enums.StatusEnum>()
-            .Select(cs => new Status { Id = (int)cs, Name = cs, Description = GetEnumDescription(cs)  ?? string.Empty })); // тут надо вытянуть значение с атрибута Description    }}
+            builder.HasData(Enum.GetValues(typeof(StatusEnum))
+                .Cast<StatusEnum>()
+            .Select(cs => new Status { Id = (int)cs, Name = cs, Description = GetEnumDescription(cs)  ?? string.Empty }));
         }
         public static string GetEnumDescription(Enum value)
         {
