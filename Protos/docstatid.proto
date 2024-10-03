@@ -6,17 +6,12 @@ option csharp_namespace = "GrpcDocumentService";
 
 package documents;
 
-
 service DocumentGrpc {
   rpc GetAllDocuments (google.protobuf.Empty) returns (GetAllDocumentsResponse);
   rpc GetDocumentById (GetDocumentByIdRequest) returns (GetDocumentByIdResponse);
   rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentResponse);
-  rpc DeleteDocument (DeleteDocumentRequest) returns (DeleteDocumentResponse);
+  rpc DeleteDocument (DeleteDocumentRequest) returns (google.protobuf.Empty);
 }
-
-
-
-
 
 message GetAllDocumentsResponse {
   repeated Document documents = 1;
@@ -37,17 +32,12 @@ message CreateDocumentRequest {
 
 message CreateDocumentResponse {
   int32 id = 1;
-  string status = 2;
+  int32 statusId = 2;
 }
 
 message DeleteDocumentRequest {
   int32 id = 1;
 }
-
-message DeleteDocumentResponse {
-  string status = 1;
-}
-
 
 message Document {
   int32 id = 1;

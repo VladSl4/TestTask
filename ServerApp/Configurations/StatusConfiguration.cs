@@ -19,11 +19,16 @@ namespace ServerApp.Configurations
                 .Cast<StatusEnum>()
             .Select(cs => new Status { Id = (int)cs, Name = cs, Description = GetEnumDescription(cs)  ?? string.Empty }));
         }
-        public static string GetEnumDescription(Enum value)
+        public static string? GetEnumDescription<T>(T value) where T : Enum
         {
-            FieldInfo field = value.GetType().GetField(value.ToString());
-            var descriptionAttribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
-            return descriptionAttribute?.Description;
+            var field = value.GetType()
+                .GetTypeInfo()
+                .DeclaredMembers
+                .FirstOrDefault(n => n.Name == value.ToString())
+                ?.GetCustomAttribute<DescriptionAttribute>()
+                ?.Description;
+
+            return field ?? string.Empty;
         }
     }
 }

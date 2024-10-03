@@ -1,7 +1,7 @@
-﻿namespace ClientApp.Configurations
+﻿namespace ClientApp.Configurations;
+
+public class UriConfig
 {
-    public class UriConfig
-    {
-        public Uri uri { get; set; }
-    }
+    public Uri uri { get; set; }
 }
+
