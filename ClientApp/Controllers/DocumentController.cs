@@ -15,19 +15,18 @@ public class DocumentController: ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Document>>> GetAllDocuments()
+    public async Task<ICollection<Document>> GetAllDocuments()
     {
         var response = await _client.GetAllDocumentsAsync(new Empty());
-        return Ok(response.Documents);
+        return response.Documents;
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Document>> GetDocumentById(int id)
+    public async Task<Document> GetDocumentById(int id)
     {
         var request = new GetDocumentByIdRequest { Id = id };    
         var response = await _client.GetDocumentByIdAsync(request);
-        return Ok(response.Document);
-            
+        return response.Document;
     }
 
     [HttpPost]
@@ -38,11 +37,11 @@ public class DocumentController: ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteDocument(int id)
+    public async Task<Empty> DeleteDocument(int id)
     {
         var request = new DeleteDocumentRequest { Id = id };            
         await _client.DeleteDocumentAsync(request);               
-        return NoContent();            
+        return new Empty();            
     }
 }
 

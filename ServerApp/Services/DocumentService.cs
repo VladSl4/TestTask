@@ -27,7 +27,7 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
                              from s1 in _dbContext.DocumentStatuses.Where(ds => d.Id == ds.DocumentId).DefaultIfEmpty()
                              from s2 in _dbContext.DocumentStatuses.Where(ds => d.Id == ds.DocumentId && s1.Id < ds.Id).DefaultIfEmpty()
                              join s in _dbContext.Statuses on s1.StatusId equals s.Id
-                             where s2 == null && s1.StatusId != 2
+                             where s2 == null && s1.StatusId != (int)StatusEnum.Deleted
                              select new GrpcDocument
                              {
                                 Id = d.Id,
@@ -50,7 +50,7 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
                              from s1 in _dbContext.DocumentStatuses.Where(ds => d.Id == ds.DocumentId).DefaultIfEmpty()
                              from s2 in _dbContext.DocumentStatuses.Where(ds => d.Id == ds.DocumentId && s1.Id < ds.Id).DefaultIfEmpty()
                              join s in _dbContext.Statuses on s1.StatusId equals s.Id
-                             where s2 == null && d.Id == request.Id && s1.StatusId != 2
+                             where s2 == null && d.Id == request.Id && s1.StatusId != (int)StatusEnum.Deleted
                              select new GrpcDocument
                              {
                                  Id = d.Id,
@@ -89,7 +89,7 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
         };
 
         _dbContext.Documents.Add(newDocument);
-        _dbContext.DocumentStatuses.Add(newDocument.DocumentStatuses.FirstOrDefault());
+        //_dbContext.DocumentStatuses.Add(newDocument.DocumentStatuses.FirstOrDefault());
         await _dbContext.SaveChangesAsync();
 
         return new CreateDocumentResponse
@@ -104,13 +104,15 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
         var deletedStatus = StatusEnum.Deleted;
 
         var deletedItem = await (from item in _dbContext.DocumentStatuses
-                                    where item.Id == request.Id && item.StatusId !=2
-                                    select item).FirstOrDefaultAsync();
+                                 where item.Id == request.Id && item.StatusId != (int)deletedStatus
+                                 select item).ExecuteUpdateAsync(d => d.SetProperty(p => p.StatusId, (int)deletedStatus));
 
         if (deletedItem == null)
             throw new RpcException(new GrpcStatus(StatusCode.NotFound, $"Document with id {request.Id} not found"));
 
-        deletedItem.StatusId = (int)deletedStatus;
+        //deletedItem.StatusId = (int)deletedStatus;
+
+        //await _dbContext.DocumentStatuses.ExecuteUpdateAsync(d => d.)
 
         await _dbContext.SaveChangesAsync();
 

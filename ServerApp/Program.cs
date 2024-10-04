@@ -1,6 +1,5 @@
 using ServerApp.Configurations;
 using ServerApp.Data;
-
 using ServerApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);

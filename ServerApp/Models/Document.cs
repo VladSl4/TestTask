@@ -11,7 +11,7 @@ namespace ServerApp.Models
         public int Amount { get; set; }
 
         [StringLength(128)]
-        public string Description { get; set; }
+        public string Description { get; set; } = null!;
 
         public ICollection<DocumentStatus> DocumentStatuses { get; set; }
     }
