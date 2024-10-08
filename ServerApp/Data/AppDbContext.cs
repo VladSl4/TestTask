@@ -1,9 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Grpc.Core;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ServerApp.Configurations;
 using ServerApp.Models;
-
+using Status = ServerApp.Models.Status;
 namespace ServerApp.Data;
 
 public class AppDbContext: DbContext
@@ -16,6 +17,8 @@ public class AppDbContext: DbContext
 
     private readonly DatabaseConfig _dbConfig;
 
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
     public AppDbContext(IOptions<DatabaseConfig> dbConfig)
     {
         _dbConfig = dbConfig.Value;
@@ -23,14 +26,17 @@ public class AppDbContext: DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connectionString = new SqlConnectionStringBuilder
+        if (_dbConfig != null)
         {
-            DataSource = _dbConfig.DataSource,
-            InitialCatalog = _dbConfig.InitialCatalog,
-            IntegratedSecurity = _dbConfig.IntegratedSecurity      
-        };
+            var connectionString = new SqlConnectionStringBuilder
+            {
+                DataSource = _dbConfig.DataSource,
+                InitialCatalog = _dbConfig.InitialCatalog,
+                IntegratedSecurity = _dbConfig.IntegratedSecurity
+            };
 
-        optionsBuilder.UseSqlServer(connectionString.ConnectionString);
+            optionsBuilder.UseSqlServer(connectionString.ConnectionString);
+        }
         base.OnConfiguring(optionsBuilder);
     }
 

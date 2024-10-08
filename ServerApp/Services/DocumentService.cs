@@ -69,7 +69,6 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
         return response;
     }
 
-
     public override async Task<CreateDocumentResponse> CreateDocument(CreateDocumentRequest request, ServerCallContext context)
     {
         var createdStatus = StatusEnum.Created;
@@ -89,7 +88,6 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
         };
 
         _dbContext.Documents.Add(newDocument);
-        //_dbContext.DocumentStatuses.Add(newDocument.DocumentStatuses.FirstOrDefault());
         await _dbContext.SaveChangesAsync();
 
         return new CreateDocumentResponse
@@ -109,10 +107,6 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
 
         if (deletedItem == null)
             throw new RpcException(new GrpcStatus(StatusCode.NotFound, $"Document with id {request.Id} not found"));
-
-        //deletedItem.StatusId = (int)deletedStatus;
-
-        //await _dbContext.DocumentStatuses.ExecuteUpdateAsync(d => d.)
 
         await _dbContext.SaveChangesAsync();
 
