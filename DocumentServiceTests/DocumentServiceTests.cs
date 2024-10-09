@@ -61,27 +61,69 @@ public class DocumentServiceTests
     }
 
     [Test]
-    public async Task GetAllDocuments_ReturnsDocuments()
+    public async Task GetAllDocumentsTest()
     {       
         var request = new Empty();
         var serverCallContext = new Mock<ServerCallContext>();
         
         var response = await _documentService.GetAllDocuments(request, serverCallContext.Object);
-
-        Assert.That(response.Documents, Has.Count.EqualTo(2));
-        Assert.That(response.Documents.First().Description, Is.EqualTo("Test Document 1")); 
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.Documents, Has.Count.EqualTo(2));
+            Assert.That(response.Documents.First().Description, Is.EqualTo("Test Document 1"));
+        });
     }
 
     [Test]
-    public async Task GetDocumentById_ReturnsDocument()
+    public async Task GetDocumentByIdTest()
     {
-        GetDocumentByIdRequest request = new GetDocumentByIdRequest();
-        request.Id = 2;
+        GetDocumentByIdRequest request = new()
+        {
+            Id = 2
+        };
         var serverCallContext = new Mock<ServerCallContext>();
 
         var response = await _documentService.GetDocumentById(request, serverCallContext.Object);
         Assert.That(response.Document.Description, Is.EqualTo("Test Document 2"));
     }
+
+    [Test]
+    public async Task CreateDocumentTest()
+    {
+        CreateDocumentRequest request = new()
+        {
+            Amount = 3,
+            Description = "Create user UnitTest"
+        };
+        var serverCallContext = new Mock<ServerCallContext>();
+
+        var response = await _documentService.CreateDocument(request, serverCallContext.Object);
+        
+        var newUser = (from d in _dbContext.Documents
+                      where d.Description == request.Description
+                      select d).DefaultIfEmpty();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusId, Is.EqualTo((int)StatusEnum.Created));
+            Assert.That(newUser, Is.Not.Null);
+        });
+    }
+
+    //[Test]
+    //public async Task DeleteDocumentTest()
+    //{
+    //    DeleteDocumentRequest request = new() { Id = 1 };
+    //    var serverCallContext = new Mock<ServerCallContext>();
+
+    //    await _documentService.DeleteDocument(request, serverCallContext.Object);
+
+    //    var deletedDocument = (from d in _dbContext.DocumentStatuses
+    //                          where d.DocumentId == request.Id && d.StatusId == (int)StatusEnum.Deleted
+    //                          select d).DefaultIfEmpty();
+    //    Assert.That(deletedDocument, Is.Not.Null);
+
+    //}
 
     [TearDown]
     public void TearDown()

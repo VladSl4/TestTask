@@ -102,7 +102,7 @@ public class DocumentService : DocumentGrpc.DocumentGrpcBase
         var deletedStatus = StatusEnum.Deleted;
 
         var deletedItem = await (from item in _dbContext.DocumentStatuses
-                                 where item.Id == request.Id && item.StatusId != (int)deletedStatus
+                                 where item.DocumentId == request.Id && item.StatusId != (int)deletedStatus
                                  select item).ExecuteUpdateAsync(d => d.SetProperty(p => p.StatusId, (int)deletedStatus));
 
         if (deletedItem == null)
