@@ -8,6 +8,7 @@ namespace ServerApp.Models
     {
         public int Id { get; set; }
 
+        [Range(0, int.MaxValue)]
         public int Amount { get; set; }
 
         [StringLength(128)]

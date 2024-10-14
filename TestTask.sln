@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApp", "ServerApp\Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "ClientApp\ClientApp.csproj", "{63BB38D2-B58F-4B66-90EC-D297593221E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentServiceTests", "DocumentServiceTests\DocumentServiceTests.csproj", "{D4336E0E-CD5D-45D5-9F45-29E15B1B27A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerAppTests", "DocumentServiceTests\ServerAppTests.csproj", "{D4336E0E-CD5D-45D5-9F45-29E15B1B27A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentControllerTests", "DocumentControllerTests\DocumentControllerTests.csproj", "{35FC0719-8604-4605-AC89-4967EED88259}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientAppTests", "DocumentControllerTests\ClientAppTests.csproj", "{35FC0719-8604-4605-AC89-4967EED88259}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

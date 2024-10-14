@@ -32,6 +32,7 @@ public class DocumentController: ControllerBase
     [HttpPost]
     public async Task<CreateDocumentResponse> CreateDocument([FromBody] CreateDocumentRequest request)
     {
+        
         var response = await _client.CreateDocumentAsync(request);
         return response;
     }
